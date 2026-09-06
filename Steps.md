@@ -83,17 +83,38 @@ sudo apt install -y \
   curl git
 ```
 
-Install Node.js 22 if required:
+Install Node.js:
 
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt install -y nodejs
+# Download and install nvm:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.7/install.sh | bash
+# in lieu of restarting the shell
+\. "$HOME/.nvm/nvm.sh"
+# Download and install Node.js:
+nvm install 24
 ```
 
 Install .NET 8 SDK:
 
 ```bash
-sudo apt install -y dotnet-sdk-8.0
+sudo apt update 
+sudo apt install software-properties-common -y 
+sudo add-apt-repository ppa:dotnet/backports -y
+PPA_FILE=$(grep -rl "ppa.launchpadcontent.net/dotnet/backports" /etc/apt/sources.list.d/ | head -1)
+
+sudo sed -i '/^Architectures:/d' "$PPA_FILE"
+sudo sed -i '/^Components:/a Architectures: amd64' "$PPA_FILE"
+
+sudo rm -f /var/lib/apt/lists/ppa.launchpadcontent.net_dotnet_backports_ubuntu_dists_resolute_*
+
+sudo apt update
+
+apt-cache policy dotnet-sdk-8.0
+
+sudo apt install dotnet-sdk-8.0 -y
+
+dotnet --version
+
 ```
 
 If your Ubuntu release does not expose `dotnet-sdk-8.0` directly, install .NET 8 SDK from Microsoft's Ubuntu package repository, then continue.
