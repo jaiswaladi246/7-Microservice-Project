@@ -225,17 +225,22 @@ cd ../..
 ```bash
 cd services/notification-service
 
+export GEM_HOME="$HOME/.local/share/gem/ruby/3.3.0"
+export GEM_PATH="$GEM_HOME"
+export PATH="$GEM_HOME/bin:$PATH"
+
 gem install bundler
 
-export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
-
-echo 'export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"' >> ~/.bashrc
-
-bundle --version
-
+bundle config set --local path "$HOME/.bundle"
 bundle install
 
 cd ../..
+
+echo 'export GEM_HOME="$HOME/.local/share/gem/ruby/3.3.0"' >> ~/.bashrc
+echo 'export GEM_PATH="$GEM_HOME"' >> ~/.bashrc
+echo 'export PATH="$GEM_HOME/bin:$PATH"' >> ~/.bashrc
+
+source ~/.bashrc
 ```
 
 ## PHP Analytics
