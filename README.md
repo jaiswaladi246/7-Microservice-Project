@@ -224,8 +224,17 @@ cd ../..
 
 ```bash
 cd services/notification-service
+
 gem install bundler
+
+export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"
+
+echo 'export PATH="$HOME/.local/share/gem/ruby/3.3.0/bin:$PATH"' >> ~/.bashrc
+
+bundle --version
+
 bundle install
+
 cd ../..
 ```
 
