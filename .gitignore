@@ -1,0 +1,13 @@
+**/target/
+**/node_modules/
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/bin/
+**/obj/
+**/.bundle/
+logs/
+.env
+.idea/
+.vscode/
+.DS_Store
