@@ -31,18 +31,67 @@ export default function App() {
 
   async function loadAll() {
     setError("");
-    const calls = await Promise.allSettled([
-      request(`${URLs.catalog}/products`),
-      request(`${URLs.inventory}/inventory`),
-      request(`${URLs.orders}/orders`),
-      request(`${URLs.payments}/payments`),
-      request(`${URLs.notifications}/notifications${user?.email?`?recipient=${encodeURIComponent(user.email)}`:""}`),
-      request(`${URLs.analytics}/analytics/summary`)
-    ]);
-    const setters=[setProducts,setInventory,setOrders,setPayments,setNotifications,setAnalytics];
-    calls.forEach((x,i)=>{if(x.status==="fulfilled") setters[i](x.value)});
-    const failed=calls.filter(x=>x.status==="rejected");
-    if(failed.length) setError(`${failed.length} API request(s) failed. Verify backend health endpoints.`);
+
+    const services = [
+      {
+        name: "Catalog",
+        url: `${URLs.catalog}/products`,
+        setter: setProducts
+      },
+      {
+        name: "Inventory",
+        url: `${URLs.inventory}/inventory`,
+        setter: setInventory
+      },
+      {
+        name: "Orders",
+        url: `${URLs.orders}/orders`,
+        setter: setOrders
+      },
+      {
+        name: "Payments",
+        url: `${URLs.payments}/payments`,
+        setter: setPayments
+      },
+      {
+        name: "Notifications",
+        url: `${URLs.notifications}/notifications${user?.email ? `?recipient=${encodeURIComponent(user.email)}` : ""}`,
+        setter: setNotifications
+      },
+      {
+        name: "Analytics",
+        url: `${URLs.analytics}/analytics/summary`,
+        setter: setAnalytics
+      }
+    ];
+
+    const results = await Promise.allSettled(
+      services.map(service => request(service.url))
+    );
+
+    const failed = [];
+
+    results.forEach((result, index) => {
+      const service = services[index];
+
+      if (result.status === "fulfilled") {
+        service.setter(result.value);
+        console.log(`✅ ${service.name} API working: ${service.url}`);
+      } else {
+        const message = result.reason?.message || "Unknown error";
+
+        console.error(
+          `❌ ${service.name} API failed: ${service.url}`,
+          result.reason
+        );
+
+        failed.push(`${service.name}: ${message}`);
+      }
+    });
+
+    if (failed.length > 0) {
+      setError(failed.join(" | "));
+    }
   }
 
   useEffect(()=>{

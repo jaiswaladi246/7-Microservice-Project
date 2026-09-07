@@ -1,20 +1,33 @@
 export const URLs = {
-  auth: "http://localhost:8081",
-  catalog: "http://localhost:8082",
-  inventory: "http://localhost:8083",
-  orders: "http://localhost:8084",
-  payments: "http://localhost:8085",
-  notifications: "http://localhost:8086",
-  analytics: "http://localhost:8087"
+  auth: "/api/auth",
+  catalog: "/api/catalog",
+  inventory: "/api/inventory",
+  orders: "/api/orders",
+  payments: "/api/payments",
+  notifications: "/api/notifications",
+  analytics: "/api/analytics",
 };
 
-export async function request(url, options={}) {
-  const res = await fetch(url, {
+export async function request(url, options = {}) {
+  const response = await fetch(url, {
     ...options,
-    headers: {"Content-Type":"application/json", ...(options.headers||{})}
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
   });
-  if (res.status===204) return null;
-  const body = await res.json().catch(()=>({}));
-  if (!res.ok) throw new Error(body.error || body.detail || `HTTP ${res.status}`);
-  return body;
+
+  if (response.status === 204) return null;
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data.error ||
+      data.detail ||
+      `HTTP ${response.status}`
+    );
+  }
+
+  return data;
 }

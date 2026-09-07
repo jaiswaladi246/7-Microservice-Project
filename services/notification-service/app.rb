@@ -6,6 +6,12 @@ set :bind, "0.0.0.0"
 set :port, 8086
 set :server, :puma
 
+# Local/demo environment:
+# allow requests forwarded through Vite using the EC2 host/IP
+set :host_authorization, { permitted_hosts: [] }
+
+set :protection, except: [:json_csrf]
+
 DB_URL = ENV.fetch(
   "NOTIFICATION_DB_URL",
   "postgres://microapp:microapp123@127.0.0.1:5432/notification_db"
