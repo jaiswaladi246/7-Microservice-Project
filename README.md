@@ -712,22 +712,3 @@ sudo -u postgres psql -c "DROP DATABASE IF EXISTS analytics_db;"
 
 sudo -u postgres psql -f database/bootstrap.sql
 ```
-
-# 14. Production extensions to teach later
-
-This local project intentionally keeps infrastructure light. A production version would normally add:
-
-- API Gateway
-- OIDC/OAuth2 identity provider
-- service-to-service authentication
-- message broker such as Kafka/RabbitMQ
-- retries, circuit breakers and idempotency
-- distributed tracing
-- centralized logs
-- secret manager
-- database migration tooling
-- TLS
-- Kubernetes
-- CI/CD
-- autoscaling
-- contract tests
